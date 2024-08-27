@@ -4,7 +4,6 @@ library(miscPack)
 library(MCMCpack) # needed for the rdirichlet function
 
 library(fda)
-#library(warptk)
 library(salso)
 library(parallel)
 #install.packages("TruncatedDistributions", repos="http://R-Forge.R-project.org")
@@ -19,10 +18,10 @@ library(TruncatedDistributions) # pcprior.log_a requires truncated exponential
 
 
 
-# Try using Matt's data
+# Read in biomechanic data
 library(openxlsx)
-vgrf <- read.xlsx("~/Research/BYU/BiomechanicCurves/Matt_ACLpatients/data2_25_2023/vgrf.xlsx", startRow=1, colNames=FALSE);
-vgrf <- sapply(vgrf, as.numeric)
+#vgrf <- read.xlsx("vgrf.xlsx", startRow=1, colNames=FALSE);
+#vgrf <- sapply(vgrf, as.numeric)
 
 nsub <- (ncol(vgrf)/5)
 nobs <- nrow(vgrf)
@@ -34,7 +33,7 @@ for(i in 1:nsub){
 }
 
 # Figure S16
-#pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/vgrf.pdf", height=6, width=8)
+#pdf("vgrf.pdf", height=6, width=8)
 #  matplot((1:nobs/nobs), vgrf_mn, type='o',
 #          pch=1, lty=1, cex=0.5,
 #          ylab="Vertical Ground Reaction Force", xlab="% Stance Phase")
@@ -51,11 +50,6 @@ ran_y <- diff(range(y))
 # Rescale so that each curve is on the same scale
 rescale <- function(x) (x - min(x))/diff(range(x))
 y_scaled <- (y-min_y)/ran_y
-
-matplot(matrix(y_scaled, nrow=nobs, byrow=FALSE), type='o',
-        pch=1, col="gray70", lty=1, cex=0.5,
-        ylab="Frontal Knee Angle", xlab="Time")
-
 
 
 
@@ -123,14 +117,14 @@ date()
 
 sapply(fits_vgrf1, function(x) summary(x$kp))
 
-pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/vgrf_fits_revU3.pdf", height=4, width=8)
+pdf("vgrf_fits_revU3.pdf", height=4, width=8)
   par(mfrow=c(1,2), mar=c( 3.0, 3.5, 1.5, 1.5))# bottom, left, top, right
   plot_curves(fits_vgrf1[[2]], U=3, data=vgrf_mn)
   plot_mean(fits_vgrf1[[2]], U=3)
 dev.off()
 
 # Figure 8
-pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/vgrf_fits_revU15.pdf", height=4, width=8)
+pdf("vgrf_fits_revU15.pdf", height=4, width=8)
   par(mfrow=c(1,2), mar=c( 3.0, 3.5, 1.5, 1.5))# bottom, left, top, right
   plot_curves(fits_vgrf1[[14]], U=15, data=vgrf_mn)
   plot_mean(fits_vgrf1[[14]], U=15)
@@ -144,7 +138,7 @@ which(salso(fits_vgrf1[[2]]$z) != salso(fits_vgrf1[[14]]$z))
 
 # Figure 9
 library(fields)
-pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/coclustering_rev.pdf", height=3, width=9)
+pdf("coclustering_rev.pdf", height=3, width=9)
 #  par(mfrow=c(1,2), mar=c(2.0, 1.75, 1.25, 1.5))# bottom, left, top, right
   par(mfrow=c(1,3), mai=c(0.35, 0.35, 0.1, 0.35))# bottom, left, top, right
 
