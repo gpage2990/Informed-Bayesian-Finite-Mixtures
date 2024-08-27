@@ -9,19 +9,13 @@
 # Our comparison will be carried out using five metrics.  They are as follows
 #
 # 1. true K+ - mode of posterior of K+ (this measures bias)
-# 2. sum_{k-1}^K {(U - k)^2*Pr(K+ = k | data)} (this measures )
+# 2. sum_{k-1}^K {(U - k)^2*Pr(K+ = k | data)} (this measures accuracy of entire Post of K+ )
 # 3. true K+ - K+ estimated from salso partition estimate
 # 4. sum_i sum_{l<i} ((I[i~l] - Pr(zi=zl|y))^2
 # 5. ARI between estimated and true partition
 #
-# To match the application, we will generate data using two approaches
+# To match the application, we will generate data using two the vgrf data
 #
-#
-#    zi ~ discrete(1/U)
-#    mu_k = ((0,-1), (3,1),(6,-1), etc)
-#    Sig_k = (1    0.5)  (0.75, -0.25)  etc
-#            (0.5  1).   (-0.25, 0.75)
-#	 yi ~ MVN(mu_k, Sig_k)
 
 
 rm(list=ls())
@@ -41,28 +35,23 @@ library(mvtnorm)  # needed for rmvnorm function
 
 library(splines)
 library(spam)
-#library(INLA)
 library(ppmSuite)
 library(mclust)
 library(openxlsx)
 
-#source("~/Research/BYU/InformedFiniteMixtures/analysis/tools.R")
-source("~/shared/InformedFiniteMixtures/tools.R")
 
 sessionInfo()
 
 # set ndata in 100
-# set nobs in {100,  1000} - 25 or 250 per group approximately
+# set nobs in {100} - 25 per group approximately
 # set K in {25}
 # set U in {4}
-# set datatype in {1, 2, 3}
+# set datatype in {1}
 #       1 - use vgrf data as guide
-#       2 - use kfa data as guide
-#       3 - generate curves using Massimo's idea
 # set number of knots in {7, 10, 20}
 # set Akap in {0.1, 0.5, 1.0}
 #
-# There are 2 x 1 x 1 x 3 x 3 x 3 = 54  scenarios
+# There are 1 x 1 x 1 x 1 x 3 x 3 = 9  scenarios
 #
 # nohup ./SimulationStudy_asym.R 25 100 25 1 1 1> out1.txt &
 
