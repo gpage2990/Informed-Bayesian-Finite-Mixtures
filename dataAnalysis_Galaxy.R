@@ -50,7 +50,6 @@ for(i in 1:length(U)){
                                           tail.prob = tail_prob, ndens_y=1000,
                                           hierarchy="NO",
                                           m0=mean(yi), s20=10^2, a0=3, b0 = 2, # prior mean of sig2 is b0/(a0-1)
-#                                          m0=mean(yi), s20=10^2, a0=3, b0 = 10, # prior mean of sig2 is b0/(a0-1)
                                           niter=niter, nburn=nburn, nthin=nthin)
 
       print(summary(fits[[h]]$alpha1))
@@ -79,31 +78,6 @@ for(i in 1:length(U)){
 
 alpha1_post_mn <- sapply(fits, function(x) summary(x$alpha1))
 
-
-pest <- sapply(fits, function(x) salso(x$z, loss="VI"))
-
-
-ent <- function(x){
-  pp<-x[upper.tri(x,diag=FALSE)];
-  et1 <- pp*log(pp);
-  et2 <- (1-pp)*log(1-pp);
-  et1[is.na(et1)] <- 0;
-  et2[is.na(et2)] <- 0;
-  -sum(et1 + et2)}
-
-kp_entropy <- sapply(psm_list, ent)
-
-purity <- function(fits){
-  x <- fits$z
-  pest <- salso(x)
-  ccp <- psm(x)
-  sapply(1:nrow(ccp), function(y) c(mean(ccp[y, pest==pest[y]])*mean(1-ccp[y,pest!=pest[y]])))
-}
-c_pure <- sapply(fits, purity)
-
-
-
-
 kp_dist <- sapply(fits, function(x) table(x$kp)/nout)
 
 mse_est <- sapply(fits, function(x) sapply(1:nout, function(y) mean((x$mu[y, x$z[y,]] - yi)^2)))
@@ -111,7 +85,7 @@ mse_est <- sapply(fits, function(x) sapply(1:nout, function(y) mean((x$mu[y, x$z
 sd_psm <- sapply(psm_list, function(x) apply(x,1,sd))
 
 
-pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/postKp_galaxy_2.pdf", height=9, width=6)
+pdf("postKp_galaxy_2.pdf", height=9, width=6)
 
   par(mfrow=c(4,2), mar=c( 2.75, 3.5, 1.75, 1.5))# bottome, left, top, right
   UU <- rep(U, each=2)
@@ -134,7 +108,7 @@ pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/postKp_galaxy_2.pdf", h
   }
 dev.off()
 
-pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/postCCP_galaxy_3.pdf", height=9, width=9)
+pdf("postCCP_galaxy_3.pdf", height=9, width=9)
   par(mfrow=c(3,3), mar=c( 1.5, 0.5, 1.25, 4.2))# bottome, left, top, right
   UU <- rep(U, each=2)
   tp <- rep(c(0.1, 0.5), times=length(U))
@@ -155,7 +129,7 @@ pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/postCCP_galaxy_3.pdf", 
 dev.off()
 
 
-pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/density_est_galaxy.pdf", height=8, width=8)
+pdf("density_est_galaxy.pdf", height=8, width=8)
   par(mfrow=c(1,1))
 
   clrs <- tim.colors(length(UU))
