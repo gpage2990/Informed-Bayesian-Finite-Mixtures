@@ -159,89 +159,6 @@ for(d in 1:ndata){
     }
   }
 
-  if(datatype == 2){
-    # Try using Matt's KFA data to create curves using B-spline coefficients
-#    kfa <- read.xlsx("~/Research/BYU/BiomechanicCurves/Matt_ACLpatients/data2_25_2023/kfa.xlsx", startRow=1, colNames=FALSE);
-    kfa <- read.xlsx("~/shared/InformedFiniteMixtures/kfa.xlsx", startRow=1, colNames=FALSE);
-    kfa <- sapply(kfa, as.numeric)
-    nsub <- (ncol(kfa)/5)
-    ntime <- nrow(kfa)
-
-    kfa_mn <- NULL
-    subject <- rep(1:nsub, each=5)
-    for(i in 1:nsub){
-      kfa_mn <- cbind(kfa_mn, apply(kfa[,subject==i], 1, mean, na.rm=TRUE))
-    }
-
-    # Fit multivariate mixture to data
-    mod1 <- Mclust(t(kfa_mn), modelNames="EEI", G=Utrue)
-    clus_lab <- apply(mod1$z, 1, which.max)
-
-    # compute cluster-means to be used to generate data
-    kfa_clus_mn <- NULL
-    for(i in 1:4){
-      kfa_clus_mn <- cbind(kfa_clus_mn, apply(kfa_mn[,clus_lab==i], 1, mean, na.rm=TRUE))
-    }
-
-
-    ord <- 3
-    beta_dim <- 30
-    x <- seq(-3, 3, length=ntime)
-    B <- miscPack:::bspline(x=x, xl=range(x)[1], xr=range(x)[2],
-                            ndx=beta_dim-3, bdeg=3)
-
-    bbeta <- solve(t(B) %*% B) %*% t(B) %*% kfa_clus_mn
-
-
-    zi <- sample(1:4, size=nobs, replace=TRUE)
-    yi <- NULL
-    for(i in 1:nobs){
-      yi <- cbind(yi, rnorm(ntime, B %*% (bbeta[,zi[i]]+rnorm(beta_dim,0,2)), 0.05))
-    }
-  }
-
-
-  if(datatype == 3){
-    # generate data
-    ord <- 2
-    b_dim <- 10
-    sigma2 <- 0.5
-    s2 <- 0.5
-    sigma2.err <- 0.001 # 0.05
-
-    x <- seq(-3, 3, length=ntime)
-    B <- bspline(x=x, xl=range(x)[1], xr=range(x)[2],
-               ndx=b_dim-3, bdeg=3)
-
-    D = diff(diag(b_dim), diff=ord)
-    R = crossprod(D,D)
-    eigendec <- eigen(R)
-    ev <- eigendec$values
-    V <- eigendec$vectors
-
-    theta.ulc <- matrix(NA, nrow=ncol(B), ncol=Utrue)
-    betai <- matrix(NA, nrow=ncol(B), ncol=nobs)
-    ind <- c(rep(T, b_dim-2), rep(F,2))
-    for (k in 1:Utrue){
-      znorm <- rnorm(sum(ind))
-
-      # Generate cluster specific B-splines coefficients
-      theta.ulc[,k] <- (V[,ind]%*%diag(sqrt(1/ev[ind]))) %*% znorm  #Cluster B-spline coefficients
-    }
-    mus <- rnorm(Utrue,0,0.25)
-    zi <- sample(1:Utrue, nobs, replace=TRUE)
-    yi <- matrix(NA, nrow=ntime, ncol=nobs)
-    kappa <- 0.5
-    for(i in 1:nobs){
-  	  mu <- rnorm(1,0,0.25)
-      beta <-0
-  	  betai[,i] <- theta.ulc[,zi[i]] + rnorm(ncol(B), 0, kappa)
-  	  yi[,i] <- rnorm(ntime, mean=mus[zi[i]] +  sqrt(sigma2)*beta*x + sqrt(s2)*B %*% betai[,i], sd=sqrt(sigma2.err))
-
-    }
-  }
-
-
 
   Rho_true <- miscPack:::relabel(zi)
   ppt <- matrix(0, ncol=nobs, nrow=nobs)
@@ -280,7 +197,6 @@ for(d in 1:ndata){
                                  alpha_prior_dist="pc",
                                  basemodel=0,
                                  U=Uprior[u],
-                                 #mylambda = lambda01[u],
                                  alpha1_val = 1,
                                  alpha2_val = 1e-5,
                                  update_alpha1=TRUE,
@@ -741,7 +657,7 @@ if(FALSE){
 
 
   # Create example of synthetic dataset employed
-  vgrf <- read.xlsx("~/Research/BYU/BiomechanicCurves/Matt_ACLpatients/data2_25_2023/vgrf.xlsx", startRow=1, colNames=FALSE);
+#  vgrf <- read.xlsx("~/Research/BYU/BiomechanicCurves/Matt_ACLpatients/data2_25_2023/vgrf.xlsx", startRow=1, colNames=FALSE);
   vgrf <- sapply(vgrf, as.numeric)
   nsub <- (ncol(vgrf)/5)
   ntime <- nrow(vgrf)
@@ -777,7 +693,7 @@ if(FALSE){
     yi <- cbind(yi, rnorm(ntime, B %*% (bbeta[,zi[i]]+rnorm(beta_dim,0,0.03)), 0.01))
   }
 
-  pdf("~/Research/BYU/InformedFiniteMixtures/latex/figures/syntheticData2.pdf")
+  pdf("syntheticData2.pdf")
   matplot(x = seq(0.01,1,by=0.01), y=yi, col=zi, pch=1, type='b', xlab="% Stance Phase",
           ylab="")
   dev.off()
