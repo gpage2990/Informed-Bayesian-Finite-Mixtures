@@ -9,7 +9,7 @@ install_github("gpage2990/miscPack")
 
 Once the package is installed, the "dataAnalysis_Galaxy.R" script is self-contained and should run without any user input.  
 
-Running the simulation study will require user input.  In particularly the R-script "simulationStudy_asym2.R" is set up to be run using "gnu parallel" (https://www.gnu.org/software/parallel/) by executing the "execute_simulation.sh" bash script.  This can be done using the following terminal command
+Running the univariate simulation study will require user input.  In particularly the R-script "simulationStudy_asym2.R" is set up to be run using "gnu parallel" (https://www.gnu.org/software/parallel/) by executing the "execute_simulation.sh" bash script.  This can be done using the following terminal command
 
 ./execute_simulation.sh | parallel &
 
