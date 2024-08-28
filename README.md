@@ -15,7 +15,7 @@ Running the univariate simulation study will require user input.  In particularl
 To facilitate reproducibility, we provide the results from the simulation study in the folder "ss_results".  The figures contained in the paper can be reproduced using code that appears after the simulation study in R-script "simulationStudy_asym2.R".
 
 
-Running the functional data simulation by way of the R-script "simulationStudy_asym_multi.R" and the biomechanics analysis via "dataAnalysis_Biomechanic_rev.R" is not possible at this time as the data have not been made publicly available.  That said, I include them for completeness.  The simulation results for the functional type data are included in the folder "ss_multi_results" and the code after that which runs executes the simulation in the file ""simulationStudy_asym_multi.R" can be used to read in results from the folder and produce figures in the manuscript.
+Running the functional data simulation by way of the R-script "simulationStudy_asym_multi.R" and the biomechanics analysis via "dataAnalysis_Biomechanic_rev.R" is not possible at this time as the data have not been made publicly available.  That said, I include them for completeness.  The simulation results for the functional type data are included in the folder "ss_multi_results" and the code after that which executes the simulation in the file ""simulationStudy_asym_multi.R" can be used to read in results from the folder and produce figures in the manuscript.
 
 
 
