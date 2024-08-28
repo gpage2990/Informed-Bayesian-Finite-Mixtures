@@ -1,5 +1,5 @@
 # Informed-Bayesian-Finite-Mixtures
-This folder contains all code created to carry out simulations, galaxy data analysis, and functional data analysis that are detailed in paper entitled "Informed Bayesian Finite Mixture Models via Asymmetric Dirichlet Priors".  More details associated with each object in the fold follow
+This folder contains all code created to carry out simulations, galaxy data analysis, and functional data analysis that are detailed in paper entitled "Informed Bayesian Finite Mixture Models via Asymmetric Dirichlet Priors".  More details associated with each object in the repository follow
 
 
 All R scripts contained in this folder require the "micsPack" R-package that is available at "https://github.com/gpage2990/miscPack".  This package can be installed after loading the "devtools" library and using the following in an R session
